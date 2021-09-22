@@ -14,35 +14,44 @@ public class JThread1 extends Thread {
 
             System.out.printf("%s started... \n", Thread.currentThread().getName());
             try {
-                String words = "the first thread writes the time:";
+                String words = "the first thread writes the time:  ";
                 char[] letters = words.toCharArray();
+                FileOutputStream fos = null;
+                try {
+                    fos = new FileOutputStream("currentdata.txt");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
                 while(true) {
 
 
-                    try(PrintWriter out = new PrintWriter("C:\\Users\\user\\IdeaProjects\\java3k1lab\\src\\com\\company\\currentdata.txt")) {
+                    PrintWriter out = new PrintWriter(fos, false);
 
 
-                        for (int i = 0; i < letters.length; i++) {
-                            if (i < letters.length - 1) {
+                    for (int i = 0; i < letters.length; i++) {
+                        if (i < letters.length - 1) {
 
-                                out.print(letters[i]);
-                                Thread.sleep(500);
-                            } else {
-                                out.write(letters[i]);
-                                Thread.sleep(500);
-                                Date date = new Date();
-                                out.println(date);
-                                out.flush();
-                                out.close();
+                            out.print(letters[i]);
+                            out.flush();
+                            System.out.print(letters[i]);
+                            Thread.sleep(100);
+                        } else {
+                            out.write(letters[i]);
+                            Thread.sleep(100);
+                            Date date = new Date();
+                            out.println(date);
+                            out.flush();
+                            System.out.println(date);
 
 
-                            }
+
+
                         }
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }finally {
+
 
                     }
+
+
                 }
 
 

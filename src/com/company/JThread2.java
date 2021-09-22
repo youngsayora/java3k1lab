@@ -1,5 +1,8 @@
 package com.company;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 public class JThread2 extends Thread{
@@ -12,43 +15,42 @@ public class JThread2 extends Thread{
         try{
             while(true) {
                 Thread.sleep(15000);
-                java.io.File file = new java.io.File("C:\\Users\\user\\IdeaProjects\\java3k1lab\\src\\com\\company\\currentdata.txt");
+                File file = new File("currentdata.txt");
                 if(file.length()>200){
 
                     Date date = new Date();
+                    String newDate = date.toString().replaceAll("\\s", "__").replaceAll(":", "-");
 
-                    String path = "C:\\Users\\user\\IdeaProjects\\java3k1lab\\src\\com\\company\\" + date.toString() +".txt";
+
+                    String path = "NewFile" + newDate +".txt";
 
                     File newFile = new File(path);
 
 
-                    InputStream is = null;
-                    OutputStream os = null;
-                    try {
-                        is = new FileInputStream(file);
-                        os = new FileOutputStream(newFile);
-                        byte[] buffer = new byte[1024];
-                        int length;
-                        while ((length = is.read(buffer)) > 0) {
-                            os.write(buffer, 0, length);
+                    try (FileReader fr = new FileReader("currentdata.txt");
+                         FileWriter fw = new FileWriter(newFile)) {
+                        int c = fr.read();
+                        while(c!=-1) {
+
+                               fw.write(c);
+
+                            c = fr.read();
                         }
-                        FileWriter fwOb = new FileWriter(file, false);
-                        PrintWriter pwOb = new PrintWriter(fwOb, false);
-                        pwOb.flush();
-                        pwOb.close();
-                        fwOb.close();
-                    } catch (IOException e) {
+
+                        Files.newBufferedWriter(Paths.get("currentdata.txt"), StandardOpenOption.TRUNCATE_EXISTING);
+                        //PrintWriter pw = new PrintWriter("currentdata.txt");
+                        //pw.close();
+
+                        file = new java.io.File("currentdata.txt");
+                    } catch(IOException e) {
                         e.printStackTrace();
-                    } finally {
-                        is.close();
-                        os.close();
                     }
 
                 }
 
             }
         }
-        catch(InterruptedException | IOException e){
+        catch(InterruptedException e){
             System.out.println("Thread has been interrupted");
         }
         System.out.printf("%s fiished... \n", Thread.currentThread().getName());
