@@ -5,10 +5,21 @@ import java.io.*;
 import java.util.*;
 
 public class JThread1 extends Thread {
+
+    private boolean isActive;
+
+    void disable(){
+       isActive=false;
+        System.out.printf("%s finished... \n", Thread.currentThread().getName());
+    }
+
+
+
     JThread1(String name){
         super(name);
+        isActive = true;
     }
-    public void run(){
+    public void run() {
 
 
 
@@ -22,7 +33,7 @@ public class JThread1 extends Thread {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                while(true) {
+                while (isActive) {
 
 
                     PrintWriter out = new PrintWriter(fos, false);
@@ -33,16 +44,14 @@ public class JThread1 extends Thread {
 
                             out.print(letters[i]);
                             out.flush();
-                            System.out.print(letters[i]);
-                            Thread.sleep(100);
+
+                            Thread.sleep(400);
                         } else {
                             out.write(letters[i]);
-                            Thread.sleep(100);
+                            Thread.sleep(400);
                             Date date = new Date();
                             out.println(date);
                             out.flush();
-                            System.out.println(date);
-
 
 
 
@@ -55,15 +64,11 @@ public class JThread1 extends Thread {
                 }
 
 
-
-
-
-
-
             } catch (InterruptedException e) {
                 System.out.println("Thread has been interrupted");
             }
-            System.out.printf("%s fiished... \n", Thread.currentThread().getName());
+            System.out.printf("%s finished... \n", Thread.currentThread().getName());
+
 
     }
 }
